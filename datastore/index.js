@@ -13,7 +13,6 @@ exports.create = (text, callback) => {
       throw err;
     } else {
       let file = path.join(exports.dataDir, zeroCount + '.txt');
-      console.log(file);
       fs.writeFile(file, text, (err) => {
         callback(err, { id: zeroCount, text })
       });
@@ -22,20 +21,43 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = [];
-  _.each(items, (text, id) => {
-    data.push({ id, text });
-  });
-  callback(null, data);
+  let array = [];
+  fs.readdir(exports.dataDir, (err, filenames) => {
+    if (err) {
+      throw err;
+    } else {
+      filenames.forEach((file) => {
+        //console.log(path.join(exports.dataDir, file));
+        fs.readFile(path.join(exports.dataDir, file), (err, data) => {
+          if (err) {
+            throw err;
+          } else {
+            array.push(data);
+          }
+        })
+      })
+    }
+  })
+  callback(null, array);
+  // let fileLength = fs.readdirSync(exports.dataDir).length;
+  // for (let i = 0; i < fileLength; i++) {
+  return array;
+  // }
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  fs.readdir(exports.dataDir, (err, filenames) => {
+    filenames.forEach((file) => {
+      if (file.slice(0, -4) === id) {
+        console.log("FOUND IT !");
+        fs.readFile(exports.dataDir + file, (err, data) => {
+          return { id, text: data }
+        })
+
+      }
+    })
+  })
+  return "error"
 };
 
 exports.update = (id, text, callback) => {

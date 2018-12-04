@@ -39,15 +39,15 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = (callback = function() {}) => {
+exports.getNextUniqueId = (callback = function () { }) => {
   readCounter((err, count) => {
-    if(err) {
+    if (err) {
       throw err;
-    } else  {
-      writeCounter(count+1, (err, zeroCount) => {
-        if(err) {
+    } else {
+      writeCounter(count + 1, (err, zeroCount) => {
+        if (err) {
           throw err;
-        } else  {
+        } else {
           callback(err, zeroCount);
           c = zeroCount;
         }
@@ -55,7 +55,7 @@ exports.getNextUniqueId = (callback = function() {}) => {
     }
   })
   return c;
-};  
+};
 
 
 
